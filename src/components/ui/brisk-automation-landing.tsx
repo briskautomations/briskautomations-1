@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence, useScroll, useSpring } from "framer-motion";
+import { motion, AnimatePresence, useSpring } from "framer-motion";
 import {
   Menu,
   X,
@@ -86,7 +86,7 @@ const footerLinks: FooterSection[] = [
 ];
 
 // Animated Number Component
-const AnimatedNumber: React.FC<{ value: number; duration?: number }> = ({ value, duration = 0.5 }) => {
+const AnimatedNumber: React.FC<{ value: number; duration?: number }> = ({ value }) => {
   const spring = useSpring(value, {
     stiffness: 100,
     damping: 30,
