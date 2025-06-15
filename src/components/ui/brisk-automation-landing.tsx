@@ -1,35 +1,27 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence, useScroll, useSpring, useTransform } from "framer-motion";
-import { 
-  ChevronDown, 
-  Menu, 
-  X, 
-  PlayCircle, 
-  Hexagon, 
-  ArrowRight, 
-  Users, 
-  TrendingUp, 
-  Shield,
+import { motion, AnimatePresence, useScroll, useSpring } from "framer-motion";
+import {
+  Menu,
+  X,
+  PlayCircle,
+  Hexagon,
+  ArrowRight,
+  Users,
+  TrendingUp,
   Clock,
   DollarSign,
   Zap,
   Bot,
   Cloud,
   Target,
-  CheckCircle,
-  Mail,
-  Building,
-  User,
   MessageSquare,
-  FrameIcon,
   FacebookIcon,
   InstagramIcon,
   YoutubeIcon,
   LinkedinIcon
 } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
 
 interface NavItem {
@@ -117,7 +109,7 @@ const AnimatedNumber: React.FC<{ value: number; duration?: number }> = ({ value,
 const BriskAutomationLanding: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-    const [roiInputs, setRoiInputs] = useState({
+  const [roiInputs, setRoiInputs] = useState({
     leads: 500,
     dealSize: 5000,
     recruitingHours: 40,
@@ -125,9 +117,6 @@ const BriskAutomationLanding: React.FC = () => {
   });
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-  });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -148,10 +137,10 @@ const BriskAutomationLanding: React.FC = () => {
     };
   }, [isMobileMenuOpen]);
 
-    const calculateROI = () => {
+  const calculateROI = () => {
     const newRevenue = Math.round(roiInputs.leads * 0.15 * roiInputs.dealSize);
     const laborSavings = Math.round(roiInputs.recruitingHours * 0.7 * roiInputs.hourlyRate);
-    
+
     return {
       newRevenue,
       laborSavings,
@@ -177,15 +166,15 @@ const BriskAutomationLanding: React.FC = () => {
 
   const mobileMenuVariants = {
     hidden: { opacity: 0, y: -20 },
-    visible: { 
-      opacity: 1, 
-      y: 0, 
-      transition: { duration: 0.2, ease: "easeOut" } 
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.2, ease: "easeOut" }
     },
-    exit: { 
-      opacity: 0, 
-      y: -20, 
-      transition: { duration: 0.15, ease: "easeIn" } 
+    exit: {
+      opacity: 0,
+      y: -20,
+      transition: { duration: 0.15, ease: "easeIn" }
     },
   };
 
@@ -212,14 +201,14 @@ const BriskAutomationLanding: React.FC = () => {
   return (
     <div ref={containerRef} className="min-h-screen bg-[#F0F0F5] relative overflow-hidden">
       {/* Background Elements */}
-      <div 
+      <div
         className="absolute inset-0 opacity-[0.12]"
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='6' seed='5' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)' opacity='1'/%3E%3C/svg%3E")`,
         }}
       />
-      
-      <div 
+
+      <div
         className="absolute inset-0 opacity-40"
         style={{
           background: 'radial-gradient(ellipse at center, rgba(255, 255, 255, 0.1) 0%, rgba(212, 160, 167, 0.06) 30%, rgba(45, 26, 83, 0.04) 70%, rgba(45, 26, 83, 0.08) 100%)',
@@ -264,8 +253,8 @@ const BriskAutomationLanding: React.FC = () => {
                 <motion.div
                   className="relative w-10 h-10 flex items-center justify-center"
                   initial={{ opacity: 0, scale: 0.5 }}
-                  animate={{ 
-                    opacity: 1, 
+                  animate={{
+                    opacity: 1,
                     scale: 1,
                     rotate: [0, 360]
                   }}
@@ -284,7 +273,7 @@ const BriskAutomationLanding: React.FC = () => {
                       ease: "linear"
                     }}
                   />
-                  
+
                   <motion.div
                     className="w-6 h-6 bg-gradient-to-br from-[#2D1A53] to-[#4A3B7A] rounded-full flex items-center justify-center shadow-lg"
                     animate={{
@@ -383,20 +372,20 @@ const BriskAutomationLanding: React.FC = () => {
               variants={staggerItem}
               className="inline-flex items-center"
             >
-              <motion.div 
+              <motion.div
                 className="relative bg-white/20 backdrop-blur-3xl border border-white/30 rounded-full px-6 py-3 shadow-2xl overflow-hidden"
                 style={{
                   background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.1) 100%)',
                   boxShadow: '0 8px 32px rgba(45, 26, 83, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.4), inset 0 -1px 0 rgba(255, 255, 255, 0.1)',
                 }}
                 initial={{ opacity: 0, scale: 0.8, y: 20 }}
-                animate={{ 
+                animate={{
                   opacity: 1,
                   scale: 1,
                   y: 0,
                 }}
-                transition={{ 
-                  duration: 0.8, 
+                transition={{
+                  duration: 0.8,
                   ease: "easeOut",
                   delay: 0.2
                 }}
@@ -415,7 +404,7 @@ const BriskAutomationLanding: React.FC = () => {
                       ease: "easeInOut"
                     }}
                   />
-                  <motion.span 
+                  <motion.span
                     className="relative text-sm font-semibold text-[#2D1A53]"
                     style={{
                       textShadow: '0 1px 2px rgba(255, 255, 255, 0.8)',
@@ -469,10 +458,10 @@ const BriskAutomationLanding: React.FC = () => {
         </div>
       </main>
 
-            {/* Hidden Cost Section */}
+      {/* Hidden Cost Section */}
       <section className="py-20 px-6 lg:px-8 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-[#2D1A53]/5 via-transparent to-[#C89BA1]/5" />
-        
+
         {/* Floating Code Elements */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <motion.div
@@ -566,7 +555,7 @@ const BriskAutomationLanding: React.FC = () => {
                 className="group relative"
               >
                 <div className={`absolute inset-0 bg-gradient-to-br ${item.gradient} rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-500`} />
-                
+
                 <div className="relative bg-white/60 backdrop-blur-xl border border-white/40 p-8 rounded-3xl hover:bg-white/80 transition-all duration-500 group-hover:scale-[1.02] group-hover:shadow-2xl">
                   {/* Floating Icon */}
                   <div className="relative mb-6">
@@ -585,7 +574,7 @@ const BriskAutomationLanding: React.FC = () => {
 
                   <h3 className="text-xl font-bold text-[#2D1A53] mb-3">{item.title}</h3>
                   <p className="text-[#8B9299] mb-4">{item.description}</p>
-                  
+
                   {/* Loss Indicator */}
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
@@ -604,17 +593,17 @@ const BriskAutomationLanding: React.FC = () => {
         </div>
       </section>
 
-                                                {/* ROI Calculator Section */}
+      {/* ROI Calculator Section */}
       <section id="roi" className="py-20 px-6 lg:px-8 relative overflow-hidden">
         {/* Background Elements */}
-        <div 
+        <div
           className="absolute inset-0 opacity-[0.08]"
           style={{
             backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='6' seed='5' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)' opacity='1'/%3E%3C/svg%3E")`,
           }}
         />
-        
-        <div 
+
+        <div
           className="absolute inset-0 opacity-30"
           style={{
             background: 'radial-gradient(ellipse at center, rgba(255, 255, 255, 0.1) 0%, rgba(212, 160, 167, 0.06) 30%, rgba(45, 26, 83, 0.04) 70%, rgba(45, 26, 83, 0.08) 100%)',
@@ -637,7 +626,7 @@ const BriskAutomationLanding: React.FC = () => {
             }}
           />
         </div>
-        
+
         <div className="max-w-6xl mx-auto relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -653,7 +642,7 @@ const BriskAutomationLanding: React.FC = () => {
               transition={{ duration: 0.5 }}
               viewport={{ once: true }}
             >
-              <motion.div 
+              <motion.div
                 className="relative bg-white/20 backdrop-blur-3xl border border-white/30 rounded-full px-6 py-3 shadow-2xl overflow-hidden mb-6"
                 style={{
                   background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.1) 100%)',
@@ -674,7 +663,7 @@ const BriskAutomationLanding: React.FC = () => {
                       ease: "easeInOut"
                     }}
                   />
-                  <motion.span 
+                  <motion.span
                     className="relative text-sm font-semibold text-[#2D1A53]"
                     style={{
                       textShadow: '0 1px 2px rgba(255, 255, 255, 0.8)',
@@ -713,8 +702,8 @@ const BriskAutomationLanding: React.FC = () => {
             className="relative"
           >
             <div className="absolute inset-0 bg-gradient-to-br from-[#2D1A53]/10 to-[#C89BA1]/10 rounded-3xl blur-xl" />
-            
-            <div 
+
+            <div
               className="relative bg-white/60 backdrop-blur-xl border border-white/40 rounded-3xl shadow-lg"
               style={{
                 background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.2) 100%)',
@@ -731,8 +720,8 @@ const BriskAutomationLanding: React.FC = () => {
                     { label: "Hours on manual recruiting/month", key: "recruitingHours", max: 200, icon: Clock },
                     { label: "Hourly labor cost ($/hr)", key: "hourlyRate", max: 200, icon: TrendingUp }
                   ].map((input) => (
-                    <motion.div 
-                      key={input.key} 
+                    <motion.div
+                      key={input.key}
                       className="space-y-4"
                       initial={{ opacity: 0, x: -20 }}
                       whileInView={{ opacity: 1, x: 0 }}
@@ -748,7 +737,7 @@ const BriskAutomationLanding: React.FC = () => {
                             {input.label}
                           </label>
                         </div>
-                        <motion.span 
+                        <motion.span
                           className="bg-gradient-to-r from-[#2D1A53] to-[#4A3B7A] text-white px-4 py-2 rounded-xl font-bold text-sm shadow-lg"
                           whileHover={{ scale: 1.05 }}
                         >
@@ -763,8 +752,8 @@ const BriskAutomationLanding: React.FC = () => {
                               width: `${(roiInputs[input.key as keyof typeof roiInputs] / input.max) * 100}%`
                             }}
                             initial={{ width: 0 }}
-                            animate={{ 
-                              width: `${(roiInputs[input.key as keyof typeof roiInputs] / input.max) * 100}%` 
+                            animate={{
+                              width: `${(roiInputs[input.key as keyof typeof roiInputs] / input.max) * 100}%`
                             }}
                             transition={{ duration: 0.5, ease: "easeOut" }}
                           />
@@ -788,7 +777,7 @@ const BriskAutomationLanding: React.FC = () => {
                 {/* Right Side - Results */}
                 <div className="space-y-6">
                   <h3 className="text-2xl font-bold text-[#2D1A53] mb-6">Your Automation Impact</h3>
-                  
+
                   <motion.div
                     className="relative"
                     initial={{ opacity: 0, scale: 0.95 }}
@@ -797,8 +786,8 @@ const BriskAutomationLanding: React.FC = () => {
                     viewport={{ once: true }}
                   >
                     <div className="absolute inset-0 bg-gradient-to-br from-[#2D1A53] to-[#4A3B7A] rounded-2xl blur-lg opacity-20" />
-                    
-                    <div 
+
+                    <div
                       className="relative p-6 rounded-2xl text-white overflow-hidden"
                       style={{
                         background: 'linear-gradient(135deg, #2D1A53 0%, #4A3B7A 50%, #8B6B8F 100%)',
@@ -806,15 +795,15 @@ const BriskAutomationLanding: React.FC = () => {
                       }}
                     >
                       <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />
-                      
+
                       <div className="relative space-y-6">
-                        <motion.div 
+                        <motion.div
                           className="text-center p-4 bg-white/10 rounded-xl backdrop-blur-sm border border-white/20"
                           whileHover={{ scale: 1.05, y: -2 }}
                           transition={{ duration: 0.2 }}
                         >
                           <div className="text-sm opacity-80 mb-2">Additional Monthly Revenue</div>
-                          <motion.div 
+                          <motion.div
                             className="text-3xl font-bold text-green-400"
                             initial={{ opacity: 0, scale: 0.5 }}
                             animate={{ opacity: 1, scale: 1 }}
@@ -824,13 +813,13 @@ const BriskAutomationLanding: React.FC = () => {
                           </motion.div>
                         </motion.div>
 
-                        <motion.div 
+                        <motion.div
                           className="text-center p-4 bg-white/10 rounded-xl backdrop-blur-sm border border-white/20"
                           whileHover={{ scale: 1.05, y: -2 }}
                           transition={{ duration: 0.2 }}
                         >
                           <div className="text-sm opacity-80 mb-2">Time Saved Monthly</div>
-                          <motion.div 
+                          <motion.div
                             className="text-3xl font-bold text-blue-400"
                             initial={{ opacity: 0, scale: 0.5 }}
                             animate={{ opacity: 1, scale: 1 }}
@@ -840,13 +829,13 @@ const BriskAutomationLanding: React.FC = () => {
                           </motion.div>
                         </motion.div>
 
-                        <motion.div 
+                        <motion.div
                           className="text-center p-4 bg-white/10 rounded-xl backdrop-blur-sm border border-white/20"
                           whileHover={{ scale: 1.05, y: -2 }}
                           transition={{ duration: 0.2 }}
                         >
                           <div className="text-sm opacity-80 mb-2">Labor Cost Savings</div>
-                          <motion.div 
+                          <motion.div
                             className="text-3xl font-bold text-yellow-400"
                             initial={{ opacity: 0, scale: 0.5 }}
                             animate={{ opacity: 1, scale: 1 }}
@@ -875,17 +864,17 @@ const BriskAutomationLanding: React.FC = () => {
         </div>
       </section>
 
-                                                                                                {/* Services Section */}
+      {/* Services Section */}
       <section id="services" className="py-20 px-6 lg:px-8 relative overflow-hidden">
         {/* Advanced Background Elements */}
-        <div 
+        <div
           className="absolute inset-0 opacity-[0.03]"
           style={{
             backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='2.5' numOctaves='8' seed='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)' opacity='1'/%3E%3C/svg%3E")`,
           }}
         />
-        
-        <div 
+
+        <div
           className="absolute inset-0 opacity-20"
           style={{
             background: 'conic-gradient(from 0deg at 50% 50%, rgba(45, 26, 83, 0.02) 0deg, rgba(212, 160, 167, 0.04) 90deg, rgba(139, 107, 143, 0.03) 180deg, rgba(45, 26, 83, 0.02) 270deg, rgba(212, 160, 167, 0.04) 360deg)',
@@ -922,7 +911,7 @@ const BriskAutomationLanding: React.FC = () => {
               ease: "easeInOut",
             }}
           />
-          
+
           {/* Geometric Patterns */}
           <motion.div
             className="absolute top-1/3 right-1/4 w-2 h-2 bg-[#2D1A53]/20 rounded-full"
@@ -966,7 +955,7 @@ const BriskAutomationLanding: React.FC = () => {
               transition={{ duration: 0.5 }}
               viewport={{ once: true }}
             >
-              <motion.div 
+              <motion.div
                 className="relative bg-white/20 backdrop-blur-3xl border border-white/30 rounded-full px-6 py-3 shadow-2xl overflow-hidden mb-8"
                 style={{
                   background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.1) 100%)',
@@ -992,7 +981,7 @@ const BriskAutomationLanding: React.FC = () => {
                       ease: "easeInOut"
                     }}
                   />
-                  <motion.span 
+                  <motion.span
                     className="relative text-sm font-semibold text-[#2D1A53]"
                     style={{
                       textShadow: '0 1px 2px rgba(255, 255, 255, 0.8)',
@@ -1004,7 +993,7 @@ const BriskAutomationLanding: React.FC = () => {
               </motion.div>
             </motion.div>
 
-            <motion.h2 
+            <motion.h2
               className="text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-tight mb-6"
               style={{
                 background: 'linear-gradient(to right, #2D1A53, #8B6B8F, #C89BA1)',
@@ -1020,7 +1009,7 @@ const BriskAutomationLanding: React.FC = () => {
             >
               Premium AI Systems
             </motion.h2>
-            <motion.p 
+            <motion.p
               className="text-xl lg:text-2xl text-[#8B9299] leading-relaxed max-w-2xl mx-auto"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -1043,7 +1032,7 @@ const BriskAutomationLanding: React.FC = () => {
               },
               {
                 icon: Users,
-                title: "Recruiting Automations", 
+                title: "Recruiting Automations",
                 description: "Intelligent candidate screening with seamless workflow integration",
                 metrics: { time: "70%", quality: "85%", response: "3x" },
                 gradient: "from-[#C89BA1]/15 via-[#D4A0A7]/8 to-transparent",
@@ -1076,8 +1065,8 @@ const BriskAutomationLanding: React.FC = () => {
               >
                 {/* Enhanced Glow Effect */}
                 <div className={`absolute inset-0 bg-gradient-to-br ${service.gradient} rounded-3xl blur-2xl group-hover:blur-3xl transition-all duration-700 opacity-60 group-hover:opacity-100`} />
-                
-                <motion.div 
+
+                <motion.div
                   className="relative overflow-hidden rounded-3xl transition-all duration-500 group-hover:shadow-2xl"
                   style={{
                     background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.1) 100%)',
@@ -1085,12 +1074,11 @@ const BriskAutomationLanding: React.FC = () => {
                     border: '1px solid rgba(255, 255, 255, 0.3)',
                     boxShadow: '0 8px 32px rgba(45, 26, 83, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.4)',
                   }}
-                  whileHover={{ 
+                  whileHover={{
                     scale: 1.02,
                     rotateX: 2,
                     rotateY: 2,
                   }}
-                  style={{ transformStyle: "preserve-3d" }}
                   transition={{ duration: 0.3 }}
                 >
                   {/* Animated Background Pattern */}
@@ -1113,7 +1101,7 @@ const BriskAutomationLanding: React.FC = () => {
 
                   <div className="relative p-8">
                     <div className="flex items-start gap-6">
-                      <motion.div 
+                      <motion.div
                         className="flex-shrink-0 relative"
                         whileHover={{ scale: 1.1, rotate: 5 }}
                         transition={{ duration: 0.3 }}
@@ -1121,7 +1109,7 @@ const BriskAutomationLanding: React.FC = () => {
                         <div className={`relative w-16 h-16 bg-gradient-to-br ${service.accentColor} rounded-2xl flex items-center justify-center shadow-lg`}>
                           <service.icon className="w-8 h-8 text-white" />
                           <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent rounded-2xl" />
-                          
+
                           {/* Pulsing Ring */}
                           <motion.div
                             className="absolute inset-0 border-2 border-white/30 rounded-2xl"
@@ -1146,8 +1134,8 @@ const BriskAutomationLanding: React.FC = () => {
 
                         <div className="grid grid-cols-3 gap-4">
                           {Object.entries(service.metrics).map(([key, value], metricIndex) => (
-                            <motion.div 
-                              key={key} 
+                            <motion.div
+                              key={key}
                               className="text-center p-3 rounded-xl backdrop-blur-sm border border-white/20"
                               style={{
                                 background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.1) 100%)',
@@ -1157,11 +1145,8 @@ const BriskAutomationLanding: React.FC = () => {
                               initial={{ opacity: 0, y: 20 }}
                               whileInView={{ opacity: 1, y: 0 }}
                               viewport={{ once: true }}
-                              style={{ 
-                                transitionDelay: `${(index * 0.15) + (metricIndex * 0.05)}s` 
-                              }}
                             >
-                              <motion.div 
+                              <motion.div
                                 className="text-lg font-bold text-[#2D1A53]"
                                 initial={{ scale: 0.8 }}
                                 whileInView={{ scale: 1 }}
@@ -1253,10 +1238,10 @@ const BriskAutomationLanding: React.FC = () => {
         </div>
       </section>
 
-            {/* Preview Section */}
+      {/* Preview Section */}
       <section className="py-20 px-6 lg:px-8 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-[#2D1A53]/5 via-transparent to-[#C89BA1]/5" />
-        
+
         <div className="max-w-6xl mx-auto relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -1291,11 +1276,11 @@ const BriskAutomationLanding: React.FC = () => {
             className="relative"
           >
             <div className="absolute inset-0 bg-gradient-to-br from-[#2D1A53]/10 to-[#C89BA1]/10 rounded-3xl blur-xl" />
-            
+
             <div className="relative bg-white/60 backdrop-blur-xl border border-white/40 p-8 rounded-3xl shadow-lg">
               <div className="aspect-video bg-gradient-to-br from-[#2D1A53]/20 to-[#C89BA1]/20 rounded-2xl flex items-center justify-center relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-br from-[#2D1A53]/5 to-[#C89BA1]/5" />
-                
+
                 <motion.div
                   className="relative z-10 text-center"
                   initial={{ scale: 0.8, opacity: 0 }}
@@ -1340,7 +1325,7 @@ const BriskAutomationLanding: React.FC = () => {
                 >
                   Live Demo
                 </motion.div>
-                
+
                 <motion.div
                   className="absolute bottom-4 right-4 bg-[#C89BA1]/80 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold text-white"
                   animate={{ y: [0, 5, 0] }}
