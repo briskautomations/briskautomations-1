@@ -1,5 +1,5 @@
 "use client";
-
+import { Link } from "react-router-dom";
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useSpring } from "framer-motion";
 import {
@@ -22,7 +22,6 @@ import {
   YoutubeIcon,
   LinkedinIcon
 } from "lucide-react";
-import { Link } from "react-router-dom";
 
 interface NavItem {
   name: string;
