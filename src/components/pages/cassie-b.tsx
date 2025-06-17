@@ -44,47 +44,52 @@ const CassieBPage: React.FC = () => {
     setInputMessage("");
     setIsTyping(true);
 
-    try {
-      const response = await fetch("https://n8n.srv850687.hstgr.cloud/webhook/cassie", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          message: inputMessage,
-          timestamp: new Date().toISOString(),
-          sessionId: `cassie-demo-${Date.now()}`
-        }),
-      });
+try {
+  const response = await fetch("https://n8n.srv850687.hstgr.cloud/webhook/cassie", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      message: inputMessage,
+      timestamp: new Date().toISOString(),
+      sessionId: `cassie-demo-${Date.now()}`
+    }),
+  });
 
-      const data = await response.json();
-      
-      setTimeout(() => {
-        const cassieResponse = {
-          id: messages.length + 2,
-          text: data.response || data.message || "I'm here to help! Could you please rephrase your question?",
-          sender: "cassie",
-          timestamp: new Date()
-        };
-        
-        setMessages(prev => [...prev, cassieResponse]);
-        setIsTyping(false);
-      }, 1000);
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
 
-    } catch (error) {
-      console.error("Error sending message:", error);
-      setTimeout(() => {
-        const errorResponse = {
-          id: messages.length + 2,
-          text: "I'm experiencing some technical difficulties right now. Please try again in a moment, or feel free to contact our human support team!",
-          sender: "cassie",
-          timestamp: new Date()
-        };
-        
-        setMessages(prev => [...prev, errorResponse]);
-        setIsTyping(false);
-      }, 1000);
-    }
+  const data = await response.json();
+  console.log("Webhook response:", data); // Debug log
+  
+  setTimeout(() => {
+    const cassieResponse = {
+      id: messages.length + 2,
+      text: data.reply || data.response || data.message || data.answer || "I'm here to help! Could you please rephrase your question?",
+      sender: "cassie",
+      timestamp: new Date()
+    };
+    
+    setMessages(prev => [...prev, cassieResponse]);
+    setIsTyping(false);
+  }, 1000);
+
+} catch (error) {
+  console.error("Webhook error:", error);
+  setTimeout(() => {
+    const errorResponse = {
+      id: messages.length + 2,
+      text: "I'm experiencing some technical difficulties right now. Please try again in a moment, or feel free to contact our human support team!",
+      sender: "cassie",
+      timestamp: new Date()
+    };
+    
+    setMessages(prev => [...prev, errorResponse]);
+    setIsTyping(false);
+  }, 1000);
+}
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
