@@ -6,8 +6,16 @@ import { ArrowLeft, Hexagon, Phone, Calendar, CheckCircle, Star, Users, PhoneCal
 import { Link } from "react-router-dom";
 
 const CalebBPage: React.FC = () => {
-  const [selectedIndustry, setSelectedIndustry] = useState<string | null>(null);
+  const [selectedIndustry, setSelectedIndustry] = useState<string | null>("Professional Services");
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    phone: '',
+    email: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState('');
 
   const staggerContainer = {
     hidden: { opacity: 0 },
@@ -30,32 +38,41 @@ const CalebBPage: React.FC = () => {
   };
 
   const industries = [
-    { name: "Professional Services", icon: Building, image: "https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=400" },
-    { name: "E-commerce Stores", icon: ShoppingCart, image: "https://images.pexels.com/photos/230544/pexels-photo-230544.jpeg?auto=compress&cs=tinysrgb&w=400" },
-    { name: "Real Estate", icon: Home, image: "https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=400" },
-    { name: "Healthcare Practices", icon: Heart, image: "https://images.pexels.com/photos/263402/pexels-photo-263402.jpeg?auto=compress&cs=tinysrgb&w=400" },
-    { name: "Home Services", icon: Settings, image: "https://images.pexels.com/photos/1249611/pexels-photo-1249611.jpeg?auto=compress&cs=tinysrgb&w=400" },
-    { name: "Digital Agencies", icon: Palette, image: "https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=400" }
-  ];
-
-  const testimonials = [
-    {
-      quote: "Caleb increased our appointment booking rate by 340% in just 2 months. Our sales team can now focus on closing deals instead of chasing leads.",
-      name: "Sarah Chen",
-      company: "TechFlow Solutions",
-      image: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=150"
+    { 
+      name: "Professional Services", 
+      icon: Building, 
+      image: "https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=600",
+      description: "Law firms, consulting, accounting, and professional service providers"
     },
-    {
-      quote: "We went from 20 sales calls per week to 200+ qualified appointments. Caleb handles the heavy lifting while we focus on high-value prospects.",
-      name: "Marcus Rodriguez",
-      company: "Elite Real Estate Group",
-      image: "https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=150"
+    { 
+      name: "E-commerce Stores", 
+      icon: ShoppingCart, 
+      image: "https://images.pexels.com/photos/230544/pexels-photo-230544.jpeg?auto=compress&cs=tinysrgb&w=600",
+      description: "Online retailers, dropshipping, and e-commerce businesses"
     },
-    {
-      quote: "The ROI is incredible. Caleb pays for himself within the first week by booking just 3 qualified appointments. Game changer for our agency.",
-      name: "Jennifer Walsh",
-      company: "Digital Marketing Pro",
-      image: "https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=150"
+    { 
+      name: "Real Estate", 
+      icon: Home, 
+      image: "https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=600",
+      description: "Real estate agents, brokers, and property management companies"
+    },
+    { 
+      name: "Healthcare Practices", 
+      icon: Heart, 
+      image: "https://images.pexels.com/photos/263402/pexels-photo-263402.jpeg?auto=compress&cs=tinysrgb&w=600",
+      description: "Medical practices, dental offices, and healthcare providers"
+    },
+    { 
+      name: "Home Services", 
+      icon: Settings, 
+      image: "https://images.pexels.com/photos/1249611/pexels-photo-1249611.jpeg?auto=compress&cs=tinysrgb&w=600",
+      description: "HVAC, plumbing, electrical, and home improvement services"
+    },
+    { 
+      name: "Digital Agencies", 
+      icon: Palette, 
+      image: "https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=600",
+      description: "Marketing agencies, web design, and digital service providers"
     }
   ];
 
@@ -85,6 +102,51 @@ const CalebBPage: React.FC = () => {
       answer: "Absolutely! Caleb's scripts, personality, and conversation flows are fully customizable to match your brand voice and sales methodology. We provide ongoing optimization based on performance data."
     }
   ];
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitMessage('');
+
+    try {
+      const response = await fetch('https://n8n.srv850687.hstgr.cloud/webhook-test/caleb', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          phone: formData.phone,
+          email: formData.email,
+          industry: selectedIndustry,
+          timestamp: new Date().toISOString(),
+          source: 'caleb-demo-form'
+        }),
+      });
+
+      if (response.ok) {
+        setSubmitMessage('Success! Caleb will call you within the next few minutes.');
+        setFormData({ firstName: '', lastName: '', phone: '', email: '' });
+      } else {
+        setSubmitMessage('Something went wrong. Please try again.');
+      }
+    } catch (error) {
+      setSubmitMessage('Network error. Please check your connection and try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const selectedIndustryData = industries.find(industry => industry.name === selectedIndustry) || industries[0];
 
   return (
     <div className="min-h-screen bg-[#F0F0F5] relative overflow-hidden">
@@ -354,7 +416,7 @@ const CalebBPage: React.FC = () => {
               </div>
             </motion.section>
 
-            {/* Experience Caleb in Action Section */}
+            {/* Try Our Live Demo Section */}
             <motion.section variants={staggerItem} className="space-y-12">
               <div className="text-center space-y-4">
                 <h2
@@ -365,377 +427,186 @@ const CalebBPage: React.FC = () => {
                     WebkitTextFillColor: 'transparent',
                   }}
                 >
-                  Experience Caleb in Action
+                  Try Our Live Demo
                 </h2>
                 <p className="text-xl text-[#8B9299] max-w-2xl mx-auto">
-                  See how Caleb can boost your sales for one of the sample businesses below
+                  Select your industry and get a personalized call from Caleb within minutes
                 </p>
               </div>
 
-              <div className="grid md:grid-cols-3 gap-6 mb-12">
-                {industries.map((industry, index) => (
-                  <motion.div
-                    key={index}
-                    className={`relative group cursor-pointer ${selectedIndustry === industry.name ? 'ring-2 ring-[#8B5CF6]' : ''}`}
-                    whileHover={{ y: -5 }}
-                    transition={{ duration: 0.3 }}
-                    onClick={() => setSelectedIndustry(industry.name)}
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-br from-[#2D1A53]/10 to-[#C89BA1]/10 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-300" />
+              <div className="grid lg:grid-cols-2 gap-12 items-start">
+                {/* Left Side - Form */}
+                <div className="space-y-8">
+                  {/* Industry Selection */}
+                  <div className="space-y-4">
+                    <h3 className="text-xl font-bold text-[#2D1A53]">Select Your Industry</h3>
+                    <div className="grid grid-cols-2 gap-3">
+                      {industries.map((industry, index) => (
+                        <motion.button
+                          key={index}
+                          onClick={() => setSelectedIndustry(industry.name)}
+                          className={`p-4 rounded-xl border transition-all duration-300 text-left ${
+                            selectedIndustry === industry.name
+                              ? 'border-[#8B5CF6] bg-[#8B5CF6]/10'
+                              : 'border-white/40 bg-white/20 hover:bg-white/30'
+                          }`}
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                        >
+                          <div className="flex items-center gap-3">
+                            <industry.icon className={`w-5 h-5 ${
+                              selectedIndustry === industry.name ? 'text-[#8B5CF6]' : 'text-[#2D1A53]'
+                            }`} />
+                            <span className={`font-medium text-sm ${
+                              selectedIndustry === industry.name ? 'text-[#8B5CF6]' : 'text-[#2D1A53]'
+                            }`}>
+                              {industry.name}
+                            </span>
+                          </div>
+                        </motion.button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Contact Form */}
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-gradient-to-br from-[#2D1A53]/10 to-[#C89BA1]/10 rounded-3xl blur-xl" />
                     
                     <div 
-                      className="relative bg-white/60 backdrop-blur-xl border border-white/40 rounded-2xl overflow-hidden shadow-lg group-hover:shadow-2xl transition-all duration-300"
+                      className="relative bg-white/60 backdrop-blur-xl border border-white/40 rounded-3xl p-8 shadow-lg"
                       style={{
                         background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.2) 100%)',
                         boxShadow: '0 8px 32px rgba(45, 26, 83, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.4)',
                       }}
                     >
-                      <div className="h-32 bg-cover bg-center" style={{ backgroundImage: `url(${industry.image})` }}>
-                        <div className="h-full bg-gradient-to-t from-black/50 to-transparent flex items-end p-4">
-                          <industry.icon className="w-6 h-6 text-white" />
+                      <h3 className="text-xl font-bold text-[#2D1A53] mb-6">Receive a live call from Caleb</h3>
+                      
+                      <form onSubmit={handleSubmit} className="space-y-4">
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-[#2D1A53] mb-2">First Name*</label>
+                            <input
+                              type="text"
+                              name="firstName"
+                              value={formData.firstName}
+                              onChange={handleInputChange}
+                              className="w-full px-4 py-3 bg-white/40 border border-white/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8B5CF6] transition-all duration-300"
+                              placeholder="John"
+                              required
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-[#2D1A53] mb-2">Last Name*</label>
+                            <input
+                              type="text"
+                              name="lastName"
+                              value={formData.lastName}
+                              onChange={handleInputChange}
+                              className="w-full px-4 py-3 bg-white/40 border border-white/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8B5CF6] transition-all duration-300"
+                              placeholder="Doe"
+                              required
+                            />
+                          </div>
                         </div>
-                      </div>
-                      <div className="p-4">
-                        <h3 className="text-lg font-bold text-[#2D1A53] text-center">{industry.name}</h3>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-
-              <div className="relative max-w-2xl mx-auto">
-                <div className="absolute inset-0 bg-gradient-to-br from-[#2D1A53]/10 to-[#C89BA1]/10 rounded-3xl blur-xl" />
-                
-                <div 
-                  className="relative bg-white/60 backdrop-blur-xl border border-white/40 rounded-3xl p-8 shadow-lg"
-                  style={{
-                    background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.2) 100%)',
-                    boxShadow: '0 8px 32px rgba(45, 26, 83, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.4)',
-                  }}
-                >
-                  <form className="space-y-6">
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-[#2D1A53] mb-2">First Name*</label>
-                        <input
-                          type="text"
-                          className="w-full px-4 py-3 bg-white/40 border border-white/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8B5CF6] transition-all duration-300"
-                          placeholder="Enter your first name"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-[#2D1A53] mb-2">Last Name*</label>
-                        <input
-                          type="text"
-                          className="w-full px-4 py-3 bg-white/40 border border-white/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8B5CF6] transition-all duration-300"
-                          placeholder="Enter your last name"
-                        />
-                      </div>
-                    </div>
-                    
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-[#2D1A53] mb-2">Phone Number*</label>
-                        <input
-                          type="tel"
-                          className="w-full px-4 py-3 bg-white/40 border border-white/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8B5CF6] transition-all duration-300"
-                          placeholder="(555) 123-4567"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-[#2D1A53] mb-2">Email Address*</label>
-                        <input
-                          type="email"
-                          className="w-full px-4 py-3 bg-white/40 border border-white/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8B5CF6] transition-all duration-300"
-                          placeholder="your@email.com"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-3">
-                      <input type="checkbox" id="recaptcha" className="w-5 h-5 text-[#8B5CF6]" />
-                      <label htmlFor="recaptcha" className="text-sm text-[#8B9299]">I'm not a robot</label>
-                    </div>
-
-                    <motion.button
-                      type="submit"
-                      className="w-full bg-gradient-to-r from-[#2D1A53] to-[#4A3B7A] text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2"
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                    >
-                      Get a Call from Caleb
-                      <Phone className="w-5 h-5" />
-                    </motion.button>
-
-                    <p className="text-xs text-[#8B9299] text-center">
-                      By submitting this form, you agree to receive a call from our AI Assistant.
-                    </p>
-                  </form>
-                </div>
-              </div>
-            </motion.section>
-
-            {/* Caleb is Built for Performance Section */}
-            <motion.section variants={staggerItem} className="space-y-12">
-              <div className="text-center space-y-4">
-                <h2
-                  className="text-4xl lg:text-5xl font-bold"
-                  style={{
-                    background: 'linear-gradient(to right, #2D1A53, #8B6B8F)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                  }}
-                >
-                  Caleb is Built for Performance
-                </h2>
-                <p className="text-xl text-[#8B9299] max-w-2xl mx-auto">
-                  Advanced AI capabilities designed to maximize your sales results
-                </p>
-              </div>
-
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {[
-                  {
-                    icon: Zap,
-                    title: "Instant Response",
-                    description: "Contacts leads within 60 seconds of capture for maximum conversion rates"
-                  },
-                  {
-                    icon: Target,
-                    title: "Smart Qualification",
-                    description: "Uses advanced AI to identify and prioritize high-value prospects"
-                  },
-                  {
-                    icon: Calendar,
-                    title: "Automated Booking",
-                    description: "Schedules appointments directly into your calendar without human intervention"
-                  },
-                  {
-                    icon: ArrowRight,
-                    title: "Follow-Up & Nurturing",
-                    description: "Maintains relationships with prospects through intelligent follow-up sequences"
-                  },
-                  {
-                    icon: Settings,
-                    title: "CRM & Platform Integration",
-                    description: "Seamlessly connects with 50+ CRMs and business tools"
-                  },
-                  {
-                    icon: Clock,
-                    title: "24/7 Coverage",
-                    description: "Never misses a lead with round-the-clock availability and instant response"
-                  }
-                ].map((feature, index) => (
-                  <motion.div
-                    key={index}
-                    className="relative group"
-                    whileHover={{ y: -5 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-br from-[#2D1A53]/10 to-[#C89BA1]/10 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-300" />
-                    
-                    <div 
-                      className="relative bg-white/60 backdrop-blur-xl border border-white/40 rounded-2xl p-6 shadow-lg group-hover:shadow-2xl transition-all duration-300"
-                      style={{
-                        background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.2) 100%)',
-                        boxShadow: '0 8px 32px rgba(45, 26, 83, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.4)',
-                      }}
-                    >
-                      <div className="w-12 h-12 bg-gradient-to-br from-[#8B5CF6] to-[#2D1A53] rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                        <feature.icon className="w-6 h-6 text-white" />
-                      </div>
-                      <h3 className="text-xl font-bold text-[#2D1A53] mb-2">{feature.title}</h3>
-                      <p className="text-[#8B9299] leading-relaxed">{feature.description}</p>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.section>
-
-            {/* Client Testimonials Section */}
-            <motion.section variants={staggerItem} className="space-y-12">
-              <div className="text-center space-y-4">
-                <h2
-                  className="text-4xl lg:text-5xl font-bold"
-                  style={{
-                    background: 'linear-gradient(to right, #2D1A53, #8B6B8F)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                  }}
-                >
-                  What Our Clients Say about Caleb
-                </h2>
-                <p className="text-xl text-[#8B9299] max-w-2xl mx-auto">
-                  Real results from businesses using Caleb to scale their sales
-                </p>
-              </div>
-
-              <div className="grid md:grid-cols-3 gap-8">
-                {testimonials.map((testimonial, index) => (
-                  <motion.div
-                    key={index}
-                    className="relative group"
-                    whileHover={{ y: -5 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-br from-[#2D1A53]/10 to-[#C89BA1]/10 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-300" />
-                    
-                    <div 
-                      className="relative bg-white/60 backdrop-blur-xl border border-white/40 rounded-2xl p-6 shadow-lg group-hover:shadow-2xl transition-all duration-300"
-                      style={{
-                        background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.2) 100%)',
-                        boxShadow: '0 8px 32px rgba(45, 26, 83, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.4)',
-                      }}
-                    >
-                      <div className="flex items-center gap-1 mb-4">
-                        {[...Array(5)].map((_, i) => (
-                          <Star key={i} className="w-5 h-5 fill-[#8B5CF6] text-[#8B5CF6]" />
-                        ))}
-                      </div>
-                      
-                      <blockquote className="text-[#2D1A53] mb-6 leading-relaxed">
-                        "{testimonial.quote}"
-                      </blockquote>
-                      
-                      <div className="flex items-center gap-3">
-                        <img
-                          src={testimonial.image}
-                          alt={testimonial.name}
-                          className="w-12 h-12 rounded-full object-cover"
-                        />
+                        
                         <div>
-                          <div className="font-semibold text-[#2D1A53]">{testimonial.name}</div>
-                          <div className="text-sm text-[#8B9299]">{testimonial.company}</div>
+                          <label className="block text-sm font-medium text-[#2D1A53] mb-2">Phone Number*</label>
+                          <input
+                            type="tel"
+                            name="phone"
+                            value={formData.phone}
+                            onChange={handleInputChange}
+                            className="w-full px-4 py-3 bg-white/40 border border-white/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8B5CF6] transition-all duration-300"
+                            placeholder="123-456-7890"
+                            required
+                          />
                         </div>
-                      </div>
+                        
+                        <div>
+                          <label className="block text-sm font-medium text-[#2D1A53] mb-2">Email Address*</label>
+                          <input
+                            type="email"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleInputChange}
+                            className="w-full px-4 py-3 bg-white/40 border border-white/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8B5CF6] transition-all duration-300"
+                            placeholder="john@company.com"
+                            required
+                          />
+                        </div>
+
+                        <motion.button
+                          type="submit"
+                          disabled={isSubmitting}
+                          className="w-full bg-gradient-to-r from-[#2D1A53] to-[#4A3B7A] text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50"
+                          whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
+                          whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
+                        >
+                          {isSubmitting ? 'Submitting...' : 'GET A CALL'}
+                          {!isSubmitting && <Phone className="w-5 h-5" />}
+                        </motion.button>
+
+                        {submitMessage && (
+                          <div className={`text-center p-3 rounded-lg ${
+                            submitMessage.includes('Success') 
+                              ? 'bg-green-100 text-green-800' 
+                              : 'bg-red-100 text-red-800'
+                          }`}>
+                            {submitMessage}
+                          </div>
+                        )}
+                      </form>
                     </div>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.section>
+                  </div>
+                </div>
 
-            {/* Pricing Section */}
-            <motion.section variants={staggerItem} className="space-y-12">
-              <div className="text-center space-y-4">
-                <h2
-                  className="text-4xl lg:text-5xl font-bold"
-                  style={{
-                    background: 'linear-gradient(to right, #2D1A53, #8B6B8F)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                  }}
-                >
-                  Pay as You Grow with Caleb
-                </h2>
-                <p className="text-xl text-[#8B9299] max-w-2xl mx-auto">
-                  Transparent pricing that scales with your success
-                </p>
-              </div>
-
-              <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-                {[
-                  {
-                    icon: "🔧",
-                    name: "Setup",
-                    price: "$497",
-                    period: "one-time",
-                    description: "Complete configuration and training",
-                    features: [
-                      "AI voice training and customization",
-                      "CRM integration and setup",
-                      "Custom script development",
-                      "Testing and optimization",
-                      "Team training session"
-                    ],
-                    popular: false
-                  },
-                  {
-                    icon: "📊",
-                    name: "Monthly Platform",
-                    price: "$297",
-                    period: "/month",
-                    description: "Access and ongoing support",
-                    features: [
-                      "Platform access and maintenance",
-                      "Regular AI model updates",
-                      "Performance monitoring",
-                      "Technical support",
-                      "Monthly optimization review"
-                    ],
-                    popular: false
-                  },
-                  {
-                    icon: "💬",
-                    name: "Per Call",
-                    price: "$2.50",
-                    period: "/call",
-                    description: "Pay only for successful connections",
-                    features: [
-                      "Only charged for answered calls",
-                      "No minimum call requirements",
-                      "Detailed call analytics",
-                      "Automatic CRM updates",
-                      "Performance reporting"
-                    ],
-                    popular: true
-                  }
-                ].map((plan, index) => (
-                  <motion.div
-                    key={index}
-                    className={`relative group ${plan.popular ? 'scale-105' : ''}`}
-                    whileHover={{ y: -5 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    {plan.popular && (
-                      <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-[#8B5CF6] to-[#2D1A53] text-white px-4 py-1 rounded-full text-sm font-semibold">
-                        Most Popular
-                      </div>
-                    )}
-                    
-                    <div className="absolute inset-0 bg-gradient-to-br from-[#2D1A53]/10 to-[#C89BA1]/10 rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-300" />
+                {/* Right Side - Industry Image and Info */}
+                <div className="space-y-6">
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-gradient-to-br from-[#2D1A53]/10 to-[#C89BA1]/10 rounded-3xl blur-xl" />
                     
                     <div 
-                      className={`relative bg-white/60 backdrop-blur-xl border rounded-3xl p-8 shadow-lg group-hover:shadow-2xl transition-all duration-300 ${
-                        plan.popular ? 'border-[#8B5CF6]/30' : 'border-white/40'
-                      }`}
+                      className="relative bg-white/60 backdrop-blur-xl border border-white/40 rounded-3xl overflow-hidden shadow-lg"
                       style={{
                         background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.2) 100%)',
                         boxShadow: '0 8px 32px rgba(45, 26, 83, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.4)',
                       }}
                     >
-                      <div className="text-center mb-8">
-                        <div className="text-4xl mb-4">{plan.icon}</div>
-                        <h3 className="text-2xl font-bold text-[#2D1A53] mb-2">{plan.name}</h3>
-                        <p className="text-[#8B9299] mb-4">{plan.description}</p>
-                        <div className="flex items-baseline justify-center">
-                          <span className="text-4xl font-bold text-[#2D1A53]">{plan.price}</span>
-                          <span className="text-[#8B9299] ml-1">{plan.period}</span>
+                      <div className="h-64 bg-cover bg-center" style={{ backgroundImage: `url(${selectedIndustryData.image})` }}>
+                        <div className="h-full bg-gradient-to-t from-black/50 to-transparent flex items-end p-6">
+                          <div className="text-white">
+                            <selectedIndustryData.icon className="w-8 h-8 mb-2" />
+                            <h3 className="text-2xl font-bold">{selectedIndustryData.name}</h3>
+                          </div>
                         </div>
                       </div>
-
-                      <ul className="space-y-3 mb-8">
-                        {plan.features.map((feature, featureIndex) => (
-                          <li key={featureIndex} className="flex items-start gap-3">
-                            <CheckCircle className="w-5 h-5 text-[#8B5CF6] mt-0.5 flex-shrink-0" />
-                            <span className="text-[#8B9299]">{feature}</span>
-                          </li>
-                        ))}
-                      </ul>
-
-                      <motion.button
-                        className={`w-full py-3 px-6 rounded-xl font-semibold transition-all duration-300 ${
-                          plan.popular
-                            ? 'bg-gradient-to-r from-[#8B5CF6] to-[#2D1A53] text-white shadow-lg hover:shadow-xl'
-                            : 'bg-white/40 text-[#2D1A53] border border-[#2D1A53]/20 hover:bg-white/60'
-                        }`}
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                      >
-                        Get Started
-                      </motion.button>
+                      <div className="p-6">
+                        <p className="text-[#8B9299] leading-relaxed">{selectedIndustryData.description}</p>
+                      </div>
                     </div>
-                  </motion.div>
-                ))}
+                  </div>
+
+                  {/* Demo Features */}
+                  <div className="grid grid-cols-2 gap-4">
+                    {[
+                      { icon: "📞", title: "Receptionist", description: "Professional call handling" },
+                      { icon: "📅", title: "Appointment Setter", description: "Calendar booking" },
+                      { icon: "🎯", title: "Lead Qualification", description: "Smart prospect scoring" },
+                      { icon: "📋", title: "Survey", description: "Data collection" }
+                    ].map((feature, index) => (
+                      <motion.div
+                        key={index}
+                        className="bg-white/40 backdrop-blur-sm p-4 rounded-xl border border-white/20 text-center"
+                        whileHover={{ scale: 1.05 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <div className="text-2xl mb-2">{feature.icon}</div>
+                        <h4 className="font-semibold text-[#2D1A53] text-sm">{feature.title}</h4>
+                        <p className="text-xs text-[#8B9299] mt-1">{feature.description}</p>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
               </div>
             </motion.section>
 
