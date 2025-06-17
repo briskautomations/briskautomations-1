@@ -339,19 +339,51 @@ const BriskAutomationLanding: React.FC = () => {
                 initial="hidden"
                 animate="visible"
                 exit="exit"
-                className="md:hidden absolute top-full left-0 right-0 bg-white/95 backdrop-blur-xl border-b border-[#2D1A53]/10 shadow-xl"
+                className="md:hidden fixed top-16 left-0 right-0 bottom-0 bg-white/95 backdrop-blur-xl border-b border-[#2D1A53]/10 shadow-xl z-40 overflow-y-auto"
               >
-                <div className="px-6 py-4 space-y-4">
-                  {navItems.map((item) => (
+                <div className="px-6 py-8 space-y-6 h-full">
+                  {/* Navigation Items */}
+                  <div className="space-y-6">
+                    {navItems.map((item, index) => (
+                      <motion.a
+                        key={item.name}
+                        href={item.href}
+                        className="block text-lg font-medium text-[#8B9299] hover:text-[#2D1A53] transition-colors duration-200 py-3 border-b border-[#2D1A53]/10"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.3, delay: index * 0.1 }}
+                      >
+                        {item.name}
+                      </motion.a>
+                    ))}
+                  </div>
+
+                  {/* CTA Button */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: 0.4 }}
+                    className="pt-6"
+                  >
                     <a
-                      key={item.name}
-                      href={item.href}
-                      className="block text-sm font-medium text-[#8B9299] hover:text-[#2D1A53] transition-colors duration-200"
+                      href="#contact"
+                      className="block w-full bg-[#C89BA1] text-white px-6 py-4 rounded-lg text-lg font-semibold hover:bg-[#C89BA1]/90 transition-all duration-200 text-center"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
-                      {item.name}
+                      Let's Talk
                     </a>
-                  ))}
+                  </motion.div>
+
+                  {/* Optional: Add some branding or additional info */}
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.3, delay: 0.6 }}
+                    className="pt-8 text-center text-sm text-[#8B9299]"
+                  >
+                    <p>Ready to automate your business?</p>
+                  </motion.div>
                 </div>
               </motion.div>
             )}
