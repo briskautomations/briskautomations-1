@@ -1,16 +1,59 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, Hexagon, MessageCircle, Clock, CheckCircle, Star, Users, Headphones, Phone, Mail, Globe, Zap, Brain, BarChart3, Shield, Building, ShoppingCart, Home, Heart, Palette, Settings, ChevronDown, ChevronUp, X } from "lucide-react";
+import { ArrowLeft, Hexagon, MessageCircle, Clock, CheckCircle, Star, Users, Headphones, ArrowRight, Play, Target, Zap, BarChart3, Settings, Shield, Building, ShoppingCart, Home, Heart, Palette, ChevronDown, ChevronUp, X } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const CassieBPage: React.FC = () => {
-  const [selectedDemo, setSelectedDemo] = useState<string | null>(null);
+  const [selectedIndustry, setSelectedIndustry] = useState<string | null>(null);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
-  const [chatOpen, setChatOpen] = useState(false);
-  const [chatMessages, setChatMessages] = useState<Array<{text: string, sender: 'user' | 'cassie'}>>([]);
-  const [currentMessage, setCurrentMessage] = useState("");
+  const [showChatWidget, setShowChatWidget] = useState(false);
+
+  // Initialize n8n chat widget
+  useEffect(() => {
+    // Load n8n chat CSS
+    const link = document.createElement('link');
+    link.href = 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css';
+    link.rel = 'stylesheet';
+    document.head.appendChild(link);
+
+    // Load and initialize n8n chat
+    const script = document.createElement('script');
+    script.type = 'module';
+    script.innerHTML = `
+      import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
+      
+      window.initN8nChat = () => {
+        createChat({
+          webhookUrl: 'YOUR_PRODUCTION_WEBHOOK_URL',
+          target: '#n8n-chat-container',
+          mode: 'window',
+          showWelcomeScreen: true,
+          defaultLanguage: 'en',
+          initialMessages: [
+            'Hi there! 👋',
+            'I\'m Cassie B., your AI Customer Support Specialist. How can I help you today?'
+          ],
+          i18n: {
+            en: {
+              title: 'Chat with Cassie B.',
+              subtitle: "I'm here to help you 24/7 with any questions about our AI customer support solutions.",
+              footer: 'Powered by Brisk Automations',
+              getStarted: 'Start Conversation',
+              inputPlaceholder: 'Ask me anything about customer support...',
+            },
+          },
+        });
+      };
+    `;
+    document.head.appendChild(script);
+
+    return () => {
+      document.head.removeChild(link);
+      document.head.removeChild(script);
+    };
+  }, []);
 
   const staggerContainer = {
     hidden: { opacity: 0 },
@@ -44,19 +87,19 @@ const CassieBPage: React.FC = () => {
   const testimonials = [
     {
       quote: "Cassie transformed our customer support. Our customers love talking to her - many don't even realize she's AI!",
-      name: "Sarah Martinez",
-      company: "TechCorp Solutions",
+      name: "Sarah M.",
+      company: "TechCorp",
       image: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=150"
     },
     {
       quote: "We went from 2-hour response times to instant responses. Customer satisfaction scores went through the roof.",
-      name: "Mike Rodriguez",
+      name: "Mike R.",
       company: "GrowthCo",
       image: "https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=150"
     },
     {
       quote: "Cassie handles 80% of our support tickets perfectly. Our human team can focus on complex issues.",
-      name: "Lisa Kim",
+      name: "Lisa K.",
       company: "ServicePro",
       image: "https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=150"
     }
@@ -65,64 +108,35 @@ const CassieBPage: React.FC = () => {
   const faqs = [
     {
       question: "How does Cassie learn about my business?",
-      answer: "Cassie is trained on your specific business knowledge base, including your products, services, policies, and common customer questions. We work with you during setup to ensure she understands your unique business needs and can provide accurate, helpful responses."
+      answer: "Cassie is trained on your specific business data, including your knowledge base, FAQs, policies, and previous customer interactions. The setup process includes comprehensive training on your products, services, and customer service protocols."
     },
     {
       question: "Can customers tell they're talking to AI?",
-      answer: "Cassie is designed to have natural, human-like conversations. Many customers don't realize they're talking to AI. However, we can configure Cassie to identify herself as an AI assistant if that aligns with your transparency preferences."
+      answer: "Cassie is designed to provide natural, human-like conversations. Many customers don't realize they're speaking with AI. However, we can configure Cassie to identify herself as an AI assistant if preferred for transparency."
     },
     {
       question: "What happens if Cassie can't solve an issue?",
-      answer: "Cassie is trained to recognize when an issue requires human intervention. She seamlessly escalates complex cases to your human support team, providing them with complete conversation context so customers don't have to repeat themselves."
+      answer: "Cassie intelligently recognizes when an issue requires human intervention and seamlessly escalates to your human support team, providing complete conversation context and customer history for a smooth handoff."
     },
     {
       question: "How quickly can Cassie be set up?",
-      answer: "Cassie can be operational within 24-48 hours. This includes training her on your business knowledge, integrating with your existing systems, and testing to ensure she's providing accurate responses before going live."
+      answer: "Cassie can be fully operational within 24-48 hours. This includes AI training, system integration, testing, and team onboarding. We handle the entire setup process for you."
     },
     {
       question: "Does Cassie work with my existing tools?",
-      answer: "Yes! Cassie integrates with all major CRM systems, helpdesk platforms, and communication tools including Zendesk, Salesforce, HubSpot, Intercom, and many others. She can also work with custom APIs."
+      answer: "Yes! Cassie integrates with all major CRMs, helpdesk systems, chat platforms, and business tools including Salesforce, HubSpot, Zendesk, Intercom, and 50+ other platforms."
     },
     {
       question: "What industries work best with Cassie?",
-      answer: "Cassie works across all industries but is particularly effective for businesses with high support volumes, repetitive questions, or those needing 24/7 availability. E-commerce, SaaS, healthcare, and professional services see excellent results."
+      answer: "Cassie works across all industries but is particularly effective for businesses with high support volumes, repetitive inquiries, or 24/7 support needs. This includes e-commerce, SaaS, healthcare, real estate, and professional services."
     }
   ];
 
-  const handleChatSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!currentMessage.trim()) return;
-
-    const newMessages = [...chatMessages, { text: currentMessage, sender: 'user' as const }];
-    setChatMessages(newMessages);
-    setCurrentMessage("");
-
-    // Simulate Cassie's response
-    setTimeout(() => {
-      let response = "I'd be happy to help you with that! ";
-      
-      if (currentMessage.toLowerCase().includes("return") || currentMessage.toLowerCase().includes("refund")) {
-        response += "For returns, you can initiate the process through your account dashboard or I can help you right now. What item would you like to return?";
-      } else if (currentMessage.toLowerCase().includes("hours") || currentMessage.toLowerCase().includes("open")) {
-        response += "We're available 24/7 through this chat, and our phone support is available Monday-Friday 9AM-6PM EST. Is there something specific I can help you with today?";
-      } else if (currentMessage.toLowerCase().includes("account") || currentMessage.toLowerCase().includes("login")) {
-        response += "I can help you with account issues. Are you having trouble logging in, or do you need to update your account information?";
-      } else if (currentMessage.toLowerCase().includes("shipping") || currentMessage.toLowerCase().includes("delivery")) {
-        response += "I can check your order status and shipping information. Could you provide your order number or the email address associated with your order?";
-      } else {
-        response += "Could you provide a bit more detail about what you need help with? I'm here to assist you with any questions or concerns.";
-      }
-
-      setChatMessages(prev => [...prev, { text: response, sender: 'cassie' }]);
-    }, 1000);
-  };
-
-  const startChat = () => {
-    setChatOpen(true);
-    if (chatMessages.length === 0) {
-      setChatMessages([
-        { text: "Hi! I'm Cassie, your AI customer support specialist. How can I help you today?", sender: 'cassie' }
-      ]);
+  const handleStartChat = () => {
+    setShowChatWidget(true);
+    // Initialize the n8n chat widget
+    if (window.initN8nChat) {
+      window.initN8nChat();
     }
   };
 
@@ -195,7 +209,7 @@ const CassieBPage: React.FC = () => {
           </div>
         </nav>
       </motion.header>
-      
+
       {/* Main Content */}
       <main className="relative z-10">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
@@ -205,7 +219,7 @@ const CassieBPage: React.FC = () => {
             animate="visible"
             className="space-y-20 py-20"
           >
-            {/* Hero Section */}
+            {/* AI Specialist Intro Section */}
             <motion.section variants={staggerItem} className="grid lg:grid-cols-2 gap-12 items-center">
               <div className="space-y-8">
                 <motion.div
@@ -269,7 +283,7 @@ const CassieBPage: React.FC = () => {
 
                   <div className="flex flex-col sm:flex-row gap-4 pt-4">
                     <motion.button
-                      onClick={startChat}
+                      onClick={handleStartChat}
                       className="bg-gradient-to-r from-[#2D1A53] to-[#4A3B7A] text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2"
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
@@ -283,6 +297,7 @@ const CassieBPage: React.FC = () => {
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                     >
+                      <Play className="w-5 h-5" />
                       See How Cassie Works
                     </motion.button>
                   </div>
@@ -334,7 +349,7 @@ const CassieBPage: React.FC = () => {
                   How Cassie Works
                 </h2>
                 <p className="text-xl text-[#8B9299] max-w-2xl mx-auto">
-                  A simple 4-step process that transforms your customer support
+                  A simple 4-step process that transforms customer support
                 </p>
               </div>
 
@@ -342,7 +357,7 @@ const CassieBPage: React.FC = () => {
                 {[
                   {
                     number: "1",
-                    icon: Globe,
+                    icon: Target,
                     title: "Customer Reaches Out",
                     description: "Phone call, email, or website chat - customers contact you however they prefer"
                   },
@@ -413,6 +428,7 @@ const CassieBPage: React.FC = () => {
               </div>
 
               <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                {/* Chat Demo Card */}
                 <motion.div
                   className="relative group"
                   whileHover={{ y: -5 }}
@@ -427,25 +443,27 @@ const CassieBPage: React.FC = () => {
                       boxShadow: '0 8px 32px rgba(45, 26, 83, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.4)',
                     }}
                   >
-                    <div className="w-20 h-20 bg-gradient-to-br from-[#8B5CF6] to-[#2D1A53] rounded-full flex items-center justify-center mx-auto mb-6">
-                      <MessageCircle size={40} className="text-white" />
+                    <div className="w-16 h-16 bg-gradient-to-br from-[#8B5CF6] to-[#2D1A53] rounded-2xl flex items-center justify-center mx-auto mb-6">
+                      <MessageCircle size={32} className="text-white" />
                     </div>
+                    
                     <h3 className="text-2xl font-bold text-[#2D1A53] mb-4">💬 Chat with Cassie Now</h3>
                     <p className="text-[#8B9299] mb-6">Ask Cassie any customer service question</p>
                     
                     <motion.button
-                      onClick={startChat}
-                      className="w-full bg-gradient-to-r from-[#8B5CF6] to-[#2D1A53] text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+                      onClick={handleStartChat}
+                      className="bg-gradient-to-r from-[#8B5CF6] to-[#2D1A53] text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 w-full mb-4"
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                     >
                       Start Chat
                     </motion.button>
                     
-                    <p className="text-sm text-[#8B9299] mt-4">Instant responses, just like your customers would experience</p>
+                    <p className="text-sm text-[#8B9299]">Instant responses, just like your customers would experience</p>
                   </div>
                 </motion.div>
 
+                {/* Phone Demo Card */}
                 <motion.div
                   className="relative group"
                   whileHover={{ y: -5 }}
@@ -460,21 +478,22 @@ const CassieBPage: React.FC = () => {
                       boxShadow: '0 8px 32px rgba(45, 26, 83, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.4)',
                     }}
                   >
-                    <div className="w-20 h-20 bg-gradient-to-br from-[#2D1A53] to-[#4A3B7A] rounded-full flex items-center justify-center mx-auto mb-6">
-                      <Phone size={40} className="text-white" />
+                    <div className="w-16 h-16 bg-gradient-to-br from-[#2D1A53] to-[#4A3B7A] rounded-2xl flex items-center justify-center mx-auto mb-6">
+                      <Headphones size={32} className="text-white" />
                     </div>
+                    
                     <h3 className="text-2xl font-bold text-[#2D1A53] mb-4">📞 Call Cassie Directly</h3>
                     <div className="text-3xl font-bold text-[#8B5CF6] mb-4">(555) 123-CHAT</div>
                     
                     <motion.button
-                      className="w-full bg-white/40 text-[#2D1A53] px-8 py-4 rounded-xl font-semibold border border-[#2D1A53]/20 hover:bg-white/60 transition-all duration-300"
+                      className="bg-white/40 text-[#2D1A53] px-8 py-4 rounded-xl font-semibold border border-[#2D1A53]/20 hover:bg-white/60 transition-all duration-300 w-full mb-4"
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                     >
                       Call Now
                     </motion.button>
                     
-                    <p className="text-sm text-[#8B9299] mt-4">Experience natural phone support - no menus, just conversation</p>
+                    <p className="text-sm text-[#8B9299]">Experience natural phone support - no menus, just conversation</p>
                   </div>
                 </motion.div>
               </div>
@@ -501,22 +520,22 @@ const CassieBPage: React.FC = () => {
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {[
                   {
-                    icon: Phone,
+                    icon: Headphones,
                     title: "Natural Phone Support",
                     description: "Real conversations, not robotic menus. Customers talk normally and get human-like responses."
                   },
                   {
-                    icon: Mail,
+                    icon: MessageCircle,
                     title: "Email Intelligence",
                     description: "Reads, understands, and responds to support emails with personalized, helpful solutions."
                   },
                   {
-                    icon: MessageCircle,
+                    icon: Clock,
                     title: "Website Chat Integration",
                     description: "Embedded chat widget that provides instant, accurate answers to visitor questions."
                   },
                   {
-                    icon: Brain,
+                    icon: Target,
                     title: "Learning & Adaptation",
                     description: "Gets smarter over time, learning your products, policies, and customer preferences."
                   },
@@ -571,7 +590,7 @@ const CassieBPage: React.FC = () => {
                   Cassie is Always On
                 </h2>
                 <p className="text-xl text-[#8B9299] max-w-2xl mx-auto">
-                  Performance metrics that matter to your business
+                  Performance metrics that matter for your business
                 </p>
               </div>
 
@@ -580,37 +599,37 @@ const CassieBPage: React.FC = () => {
                   {
                     icon: "⚡",
                     stat: "<3 Second",
-                    title: "Response",
+                    label: "Response",
                     description: "Average response time across all channels"
                   },
                   {
                     icon: "🌙",
                     stat: "24/7",
-                    title: "Availability",
+                    label: "Availability",
                     description: "Never miss a customer inquiry, even on weekends and holidays"
                   },
                   {
                     icon: "🎯",
                     stat: "95%",
-                    title: "Resolution Rate",
+                    label: "Resolution Rate",
                     description: "Solves most issues without human intervention"
                   },
                   {
                     icon: "💰",
                     stat: "70%",
-                    title: "Cost Reduction",
+                    label: "Cost Reduction",
                     description: "Reduce support costs while improving satisfaction"
                   },
                   {
                     icon: "📈",
                     stat: "10x",
-                    title: "Scale",
+                    label: "Scale",
                     description: "Handle 10x more inquiries without hiring additional staff"
                   },
                   {
                     icon: "🔗",
                     stat: "Full",
-                    title: "Integration",
+                    label: "Integration",
                     description: "Works with your existing CRM, helpdesk, and communication tools"
                   }
                 ].map((metric, index) => (
@@ -630,8 +649,8 @@ const CassieBPage: React.FC = () => {
                       }}
                     >
                       <div className="text-4xl mb-4">{metric.icon}</div>
-                      <div className="text-3xl font-bold text-[#8B5CF6] mb-2">{metric.stat}</div>
-                      <h3 className="text-lg font-bold text-[#2D1A53] mb-2">{metric.title}</h3>
+                      <div className="text-3xl font-bold text-[#8B5CF6] mb-1">{metric.stat}</div>
+                      <div className="text-lg font-semibold text-[#2D1A53] mb-2">{metric.label}</div>
                       <p className="text-[#8B9299] text-sm leading-relaxed">{metric.description}</p>
                     </div>
                   </motion.div>
@@ -639,7 +658,7 @@ const CassieBPage: React.FC = () => {
               </div>
             </motion.section>
 
-            {/* Testimonials Section */}
+            {/* Client Testimonials Section */}
             <motion.section variants={staggerItem} className="space-y-12">
               <div className="text-center space-y-4">
                 <h2
@@ -653,7 +672,7 @@ const CassieBPage: React.FC = () => {
                   What Businesses Say About Cassie
                 </h2>
                 <p className="text-xl text-[#8B9299] max-w-2xl mx-auto">
-                  Real results from companies using Cassie to transform their support
+                  Real results from companies using Cassie for customer support
                 </p>
               </div>
 
@@ -740,7 +759,7 @@ const CassieBPage: React.FC = () => {
                     name: "Monthly Platform",
                     price: "$297",
                     period: "/month",
-                    description: "Access and ongoing support",
+                    description: "Access and support",
                     features: [
                       "Access to Cassie dashboard",
                       "Performance analytics",
@@ -756,10 +775,9 @@ const CassieBPage: React.FC = () => {
                     period: "/interaction",
                     description: "Pay only for actual customer interactions",
                     features: [
+                      "Pay only for actual customer interactions",
                       "No minimums or hidden fees",
-                      "Scale up or down as needed",
-                      "Detailed interaction analytics",
-                      "Performance reporting"
+                      "Scale up or down as needed"
                     ],
                     popular: true
                   }
@@ -815,13 +833,14 @@ const CassieBPage: React.FC = () => {
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                       >
-                        Get Started
+                        Get Started with Cassie
                       </motion.button>
                     </div>
                   </motion.div>
                 ))}
               </div>
             </motion.section>
+
             {/* FAQ Section */}
             <motion.section variants={staggerItem} className="space-y-12">
               <div className="text-center space-y-4">
@@ -833,7 +852,7 @@ const CassieBPage: React.FC = () => {
                     WebkitTextFillColor: 'transparent',
                   }}
                 >
-                  Common Questions About Cassie
+                  Frequently Asked Questions about Cassie
                 </h2>
                 <p className="text-xl text-[#8B9299] max-w-2xl mx-auto">
                   Everything you need to know about working with Cassie
@@ -911,7 +930,7 @@ const CassieBPage: React.FC = () => {
                   </h2>
                   
                   <p className="text-xl text-[#8B9299] mb-8 max-w-2xl mx-auto">
-                    Join hundreds of businesses using Cassie to deliver exceptional customer support 24/7 while reducing costs and improving satisfaction.
+                    Transform your customer support with AI that understands, responds, and resolves issues 24/7.
                   </p>
 
                   <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -921,7 +940,7 @@ const CassieBPage: React.FC = () => {
                       whileTap={{ scale: 0.98 }}
                     >
                       Get Started with Cassie B.
-                      <MessageCircle className="w-5 h-5" />
+                      <ArrowRight className="w-5 h-5" />
                     </motion.button>
                     
                     <motion.button
@@ -939,78 +958,15 @@ const CassieBPage: React.FC = () => {
         </div>
       </main>
 
-      {/* Chat Widget */}
-      {chatOpen && (
-        <motion.div
-          initial={{ opacity: 0, y: 20, scale: 0.9 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          className="fixed bottom-6 right-6 w-96 h-96 bg-white/90 backdrop-blur-xl border border-white/40 rounded-2xl shadow-2xl z-50 flex flex-col"
-          style={{
-            background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.8) 100%)',
-            boxShadow: '0 20px 40px rgba(45, 26, 83, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.4)',
-          }}
+      {/* n8n Chat Widget Container */}
+      {showChatWidget && (
+        <div 
+          id="n8n-chat-container" 
+          className="fixed bottom-4 right-4 z-50"
+          style={{ width: '400px', height: '600px' }}
         >
-          {/* Chat Header */}
-          <div className="flex items-center justify-between p-4 border-b border-white/30">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-[#2D1A53] to-[#4A3B7A] rounded-full flex items-center justify-center">
-                <Headphones size={20} className="text-white" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-[#2D1A53]">Cassie B.</h3>
-                <p className="text-xs text-[#8B9299]">AI Support Specialist</p>
-              </div>
-            </div>
-            <button
-              onClick={() => setChatOpen(false)}
-              className="w-8 h-8 bg-white/40 hover:bg-white/60 rounded-full flex items-center justify-center transition-all duration-300"
-            >
-              <X size={16} className="text-[#2D1A53]" />
-            </button>
-          </div>
-
-          {/* Chat Messages */}
-          <div className="flex-1 p-4 overflow-y-auto space-y-4">
-            {chatMessages.map((message, index) => (
-              <div
-                key={index}
-                className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-              >
-                <div
-                  className={`max-w-[80%] p-3 rounded-2xl ${
-                    message.sender === 'user'
-                      ? 'bg-gradient-to-r from-[#8B5CF6] to-[#2D1A53] text-white'
-                      : 'bg-white/60 text-[#2D1A53] border border-white/40'
-                  }`}
-                >
-                  <p className="text-sm">{message.text}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Chat Input */}
-          <form onSubmit={handleChatSubmit} className="p-4 border-t border-white/30">
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={currentMessage}
-                onChange={(e) => setCurrentMessage(e.target.value)}
-                placeholder="Type your message..."
-                className="flex-1 px-3 py-2 bg-white/40 border border-white/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8B5CF6] text-sm"
-              />
-              <button
-                type="submit"
-                className="px-4 py-2 bg-gradient-to-r from-[#8B5CF6] to-[#2D1A53] text-white rounded-xl hover:shadow-lg transition-all duration-300"
-              >
-                Send
-              </button>
-            </div>
-            <p className="text-xs text-[#8B9299] mt-2 text-center">
-              This is a demo - real Cassie would know your specific business
-            </p>
-          </form>
-        </motion.div>
+          {/* n8n chat widget will be rendered here */}
+        </div>
       )}
     </div>
   );
