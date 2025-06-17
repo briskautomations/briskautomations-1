@@ -550,7 +550,7 @@ const CassieBPage: React.FC = () => {
                                         </div>
 
                                         <h3 className="text-2xl font-bold text-[#2D1A53] mb-4">📞 Call Cassie Directly</h3>
-                                        <div className="text-3xl font-bold text-[#8B5CF6] mb-4">(555) 123-CHAT</div>
+                                        <div className="text-3xl font-bold text-[#8B5CF6] mb-4">(609)-508-8569</div>
 
                                         <motion.button
                                             className="bg-white/40 text-[#2D1A53] px-8 py-4 rounded-xl font-semibold border border-[#2D1A53]/20 hover:bg-white/60 transition-all duration-300 w-full mb-4"
