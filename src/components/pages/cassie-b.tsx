@@ -30,51 +30,98 @@ const CassieBPage: React.FC = () => {
     scrollToBottom();
   }, [messages]);
 
-  const sendMessage = async () => {
-    if (!inputMessage.trim()) return;
+const sendMessage = async () => {
+  if (!inputMessage.trim()) return;
 
-    const userMessage = {
-      id: messages.length + 1,
-      text: inputMessage,
-      sender: "user",
-      timestamp: new Date()
-    };
+  const userMessage = {
+    id: messages.length + 1,
+    text: inputMessage,
+    sender: "user",
+    timestamp: new Date()
+  };
 
-    setMessages(prev => [...prev, userMessage]);
-    setInputMessage("");
-    setIsTyping(true);
+  setMessages(prev => [...prev, userMessage]);
+  const currentInput = inputMessage; // Store the input before clearing
+  setInputMessage("");
+  setIsTyping(true);
 
-try {
-  const response = await fetch("https://n8n.srv850687.hstgr.cloud/webhook/cassie", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      message: inputMessage,
-      timestamp: new Date().toISOString(),
-      sessionId: `cassie-demo-${Date.now()}`
-    }),
-  });
-
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
-  }
-
-  const data = await response.json();
-  console.log("Webhook response:", data); // Debug log
-  
-  setTimeout(() => {
-    const cassieResponse = {
-      id: messages.length + 2,
-      text: data.reply || data.response || data.message || data.answer || "I'm here to help! Could you please rephrase your question?",
-      sender: "cassie",
-      timestamp: new Date()
-    };
+  try {
+    console.log("Sending to webhook:", currentInput); // Debug log
     
-    setMessages(prev => [...prev, cassieResponse]);
-    setIsTyping(false);
-  }, 1000);
+    const response = await fetch("https://n8n.srv850687.hstgr.cloud/webhook/cassie", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        message: currentInput,
+        timestamp: new Date().toISOString(),
+        sessionId: `cassie-demo-${Date.now()}`
+      }),
+    });
+
+    console.log("Response status:", response.status); // Debug log
+    console.log("Response headers:", response.headers); // Debug log
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    // Get the raw text first to see what's actually returned
+    const rawText = await response.text();
+    console.log("Raw response text:", rawText); // Debug log
+
+    let data;
+    try {
+      data = JSON.parse(rawText);
+      console.log("Parsed JSON data:", data); // Debug log
+      console.log("All keys in response:", Object.keys(data)); // Debug log
+    } catch (parseError) {
+      console.error("JSON parse error:", parseError);
+      throw new Error("Invalid JSON response from webhook");
+    }
+    
+    setTimeout(() => {
+      // Try multiple possible response field names
+      const responseText = 
+        data.reply || 
+        data.response || 
+        data.message || 
+        data.answer || 
+        data.text || 
+        data.content ||
+        data.output ||
+        rawText || // Use raw text as fallback
+        "I'm here to help! Could you please rephrase your question?";
+      
+      console.log("Using response text:", responseText); // Debug log
+      
+      const cassieResponse = {
+        id: messages.length + 2,
+        text: responseText,
+        sender: "cassie",
+        timestamp: new Date()
+      };
+      
+      setMessages(prev => [...prev, cassieResponse]);
+      setIsTyping(false);
+    }, 1000);
+
+  } catch (error) {
+    console.error("Full webhook error:", error);
+    setTimeout(() => {
+      const errorResponse = {
+        id: messages.length + 2,
+        text: "I'm experiencing some technical difficulties right now. Please try again in a moment, or feel free to contact our human support team!",
+        sender: "cassie",
+        timestamp: new Date()
+      };
+      
+      setMessages(prev => [...prev, errorResponse]);
+      setIsTyping(false);
+    }, 1000);
+  }
+};
 
 } catch (error) {
   console.error("Webhook error:", error);
