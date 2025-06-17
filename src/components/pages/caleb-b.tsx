@@ -117,7 +117,7 @@ const CalebBPage: React.FC = () => {
     setSubmitMessage('');
 
     try {
-      const response = await fetch('https://n8n.srv850687.hstgr.cloud/webhook-test/caleb', {
+      const response = await fetch('https://n8n.srv850687.hstgr.cloud/webhook/caleb', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
