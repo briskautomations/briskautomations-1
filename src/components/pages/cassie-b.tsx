@@ -30,6 +30,53 @@ const CassieBPage: React.FC = () => {
     scrollToBottom();
   }, [messages]);
 
+  // Mock AI responses for demo purposes
+  const getMockResponse = (userMessage: string): string => {
+    const message = userMessage.toLowerCase();
+    
+    if (message.includes('hello') || message.includes('hi') || message.includes('hey')) {
+      return "Hello! I'm excited to help you today. What can I assist you with?";
+    }
+    
+    if (message.includes('price') || message.includes('cost') || message.includes('pricing')) {
+      return "Great question! Our pricing is transparent: $2,997 one-time setup, $297/month platform access, and $0.50 per customer interaction. This means you only pay when I'm actually helping your customers!";
+    }
+    
+    if (message.includes('how') && message.includes('work')) {
+      return "I work across all your customer touchpoints! I can answer phone calls with natural conversation, respond to support emails, and chat on your website. I'm trained on your specific business knowledge and can handle most customer inquiries 24/7.";
+    }
+    
+    if (message.includes('integration') || message.includes('integrate')) {
+      return "I integrate seamlessly with over 50+ platforms including Salesforce, HubSpot, Zendesk, Intercom, and most major CRMs and helpdesk systems. The setup process typically takes 24-48 hours and we handle everything for you!";
+    }
+    
+    if (message.includes('human') || message.includes('escalate')) {
+      return "Absolutely! I'm smart enough to know when an issue needs human attention. When that happens, I seamlessly transfer the conversation to your team with complete context and customer history. It's like a perfect handoff!";
+    }
+    
+    if (message.includes('industry') || message.includes('business')) {
+      return "I work great across all industries! I'm particularly effective for e-commerce, SaaS, healthcare, real estate, professional services, and any business with high support volumes or 24/7 needs. What industry are you in?";
+    }
+    
+    if (message.includes('demo') || message.includes('try')) {
+      return "You're experiencing a demo right now! In a real implementation, I'd be trained specifically on your business, products, and policies. I'd know your customers' history and could access your systems to provide even more personalized help.";
+    }
+    
+    if (message.includes('setup') || message.includes('start')) {
+      return "Getting started is easy! We begin with a consultation to understand your business, then train me on your knowledge base, integrate with your systems, and test everything thoroughly. Most clients are up and running within 48 hours!";
+    }
+    
+    // Default responses for unmatched queries
+    const defaultResponses = [
+      "That's a great question! In a real implementation, I'd have access to your complete knowledge base to give you a detailed answer. Right now, I'm just a demo version showing you how natural our conversations can be.",
+      "I'd love to help you with that! As your actual AI support specialist, I'd be trained on all your specific business information to provide accurate, helpful responses to questions just like this.",
+      "Excellent question! When I'm fully set up for your business, I'll have comprehensive knowledge about your products, services, and policies to give you the perfect answer. This demo shows how conversational and helpful I can be!",
+      "That's exactly the kind of question I'm designed to handle! In your actual implementation, I'd provide detailed, accurate information based on your business knowledge. Want to see how I could be customized for your specific needs?"
+    ];
+    
+    return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
+  };
+
   const sendMessage = async () => {
     if (!inputMessage.trim()) return;
 
@@ -41,50 +88,22 @@ const CassieBPage: React.FC = () => {
     };
 
     setMessages(prev => [...prev, userMessage]);
+    const currentMessage = inputMessage;
     setInputMessage("");
     setIsTyping(true);
 
-    try {
-      const response = await fetch("https://n8n.srv850687.hstgr.cloud/webhook/cassie", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          message: inputMessage,
-          timestamp: new Date().toISOString(),
-          sessionId: `cassie-demo-${Date.now()}`
-        }),
-      });
-
-      const data = await response.json();
+    // Simulate API delay and provide mock response
+    setTimeout(() => {
+      const cassieResponse = {
+        id: messages.length + 2,
+        text: getMockResponse(currentMessage),
+        sender: "cassie",
+        timestamp: new Date()
+      };
       
-      setTimeout(() => {
-        const cassieResponse = {
-          id: messages.length + 2,
-          text: data.response || data.message || "I'm here to help! Could you please rephrase your question?",
-          sender: "cassie",
-          timestamp: new Date()
-        };
-        
-        setMessages(prev => [...prev, cassieResponse]);
-        setIsTyping(false);
-      }, 1000);
-
-    } catch (error) {
-      console.error("Error sending message:", error);
-      setTimeout(() => {
-        const errorResponse = {
-          id: messages.length + 2,
-          text: "I'm experiencing some technical difficulties right now. Please try again in a moment, or feel free to contact our human support team!",
-          sender: "cassie",
-          timestamp: new Date()
-        };
-        
-        setMessages(prev => [...prev, errorResponse]);
-        setIsTyping(false);
-      }, 1000);
-    }
+      setMessages(prev => [...prev, cassieResponse]);
+      setIsTyping(false);
+    }, 1000 + Math.random() * 1000); // Random delay between 1-2 seconds for realism
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
