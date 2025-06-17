@@ -45,7 +45,7 @@ const CassieBPage: React.FC = () => {
     setIsTyping(true);
 
     try {
-      const response = await fetch("https://n8n.srv850687.hstgr.cloud/webhook-test/cassie", {
+      const response = await fetch("https://n8n.srv850687.hstgr.cloud/webhook/cassie", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
