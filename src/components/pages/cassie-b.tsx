@@ -9,39 +9,49 @@ const CassieBPage: React.FC = () => {
   const [selectedIndustry, setSelectedIndustry] = useState<string | null>(null);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [showChatWidget, setShowChatWidget] = useState(false);
-  const [chatLoaded, setChatLoaded] = useState(false);
 
   // Initialize n8n chat widget
   useEffect(() => {
-    const loadChatWidget = async () => {
-      try {
-        // Load n8n chat CSS
-        const link = document.createElement('link');
-        link.href = 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css';
-        link.rel = 'stylesheet';
-        document.head.appendChild(link);
+    // Load n8n chat CSS
+    const link = document.createElement('link');
+    link.href = 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css';
+    link.rel = 'stylesheet';
+    document.head.appendChild(link);
 
-        // Dynamically import the n8n chat module
-        const { createChat } = await import('https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js');
-        
-        // Store the createChat function globally for later use
-        window.n8nCreateChat = createChat;
-        setChatLoaded(true);
-      } catch (error) {
-        console.error('Failed to load n8n chat widget:', error);
-        // Fallback: create a simple chat interface
-        setChatLoaded(true);
-      }
-    };
-
-    loadChatWidget();
+    // Load and initialize n8n chat
+    const script = document.createElement('script');
+    script.type = 'module';
+    script.innerHTML = `
+      import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
+      
+      window.initN8nChat = () => {
+        createChat({
+          webhookUrl: 'YOUR_PRODUCTION_WEBHOOK_URL',
+          target: '#n8n-chat-container',
+          mode: 'window',
+          showWelcomeScreen: true,
+          defaultLanguage: 'en',
+          initialMessages: [
+            'Hi there! 👋',
+            'I\'m Cassie B., your AI Customer Support Specialist. How can I help you today?'
+          ],
+          i18n: {
+            en: {
+              title: 'Chat with Cassie B.',
+              subtitle: "I'm here to help you 24/7 with any questions about our AI customer support solutions.",
+              footer: 'Powered by Brisk Automations',
+              getStarted: 'Start Conversation',
+              inputPlaceholder: 'Ask me anything about customer support...',
+            },
+          },
+        });
+      };
+    `;
+    document.head.appendChild(script);
 
     return () => {
-      // Cleanup
-      const existingLink = document.querySelector('link[href*="@n8n/chat"]');
-      if (existingLink) {
-        document.head.removeChild(existingLink);
-      }
+      document.head.removeChild(link);
+      document.head.removeChild(script);
     };
   }, []);
 
@@ -124,38 +134,10 @@ const CassieBPage: React.FC = () => {
 
   const handleStartChat = () => {
     setShowChatWidget(true);
-    
-    // Initialize the n8n chat widget if loaded
-    if (chatLoaded && window.n8nCreateChat) {
-      try {
-        window.n8nCreateChat({
-          webhookUrl: 'https://demo-webhook-url.com/webhook', // Demo URL for now
-          target: '#n8n-chat-container',
-          mode: 'window',
-          showWelcomeScreen: true,
-          defaultLanguage: 'en',
-          initialMessages: [
-            'Hi there! 👋',
-            'I\'m Cassie B., your AI Customer Support Specialist. How can I help you today?'
-          ],
-          i18n: {
-            en: {
-              title: 'Chat with Cassie B.',
-              subtitle: "I'm here to help you 24/7 with any questions about our AI customer support solutions.",
-              footer: 'Powered by Brisk Automations',
-              getStarted: 'Start Conversation',
-              inputPlaceholder: 'Ask me anything about customer support...',
-            },
-          },
-        });
-      } catch (error) {
-        console.error('Failed to initialize n8n chat:', error);
-      }
+    // Initialize the n8n chat widget
+    if (window.initN8nChat) {
+      window.initN8nChat();
     }
-  };
-
-  const handleCloseChat = () => {
-    setShowChatWidget(false);
   };
 
   return (
@@ -976,91 +958,15 @@ const CassieBPage: React.FC = () => {
         </div>
       </main>
 
-      {/* Chat Widget */}
+      {/* n8n Chat Widget Container */}
       {showChatWidget && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.8, y: 20 }}
-          transition={{ duration: 0.3 }}
-          className="fixed bottom-4 right-4 z-50 w-96 h-[500px]"
+        <div 
+          id="n8n-chat-container" 
+          className="fixed bottom-4 right-4 z-50"
+          style={{ width: '400px', height: '600px' }}
         >
-          <div 
-            className="relative bg-white/90 backdrop-blur-xl border border-white/40 rounded-2xl shadow-2xl overflow-hidden h-full"
-            style={{
-              background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 100%)',
-              boxShadow: '0 20px 40px rgba(45, 26, 83, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.6)',
-            }}
-          >
-            {/* Chat Header */}
-            <div className="bg-gradient-to-r from-[#2D1A53] to-[#4A3B7A] p-4 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-                  <Headphones size={20} className="text-white" />
-                </div>
-                <div>
-                  <h3 className="text-white font-semibold">Cassie B.</h3>
-                  <p className="text-white/80 text-sm">AI Customer Support</p>
-                </div>
-              </div>
-              <button
-                onClick={handleCloseChat}
-                className="text-white/80 hover:text-white transition-colors"
-              >
-                <X size={20} />
-              </button>
-            </div>
-
-            {/* Chat Content */}
-            <div className="flex-1 p-4 space-y-4 overflow-y-auto" style={{ height: 'calc(100% - 140px)' }}>
-              {/* Welcome Message */}
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 bg-gradient-to-br from-[#8B5CF6] to-[#2D1A53] rounded-full flex items-center justify-center flex-shrink-0">
-                  <Headphones size={16} className="text-white" />
-                </div>
-                <div className="bg-gray-100 rounded-2xl rounded-tl-sm p-3 max-w-xs">
-                  <p className="text-sm text-gray-800">Hi there! 👋</p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 bg-gradient-to-br from-[#8B5CF6] to-[#2D1A53] rounded-full flex items-center justify-center flex-shrink-0">
-                  <Headphones size={16} className="text-white" />
-                </div>
-                <div className="bg-gray-100 rounded-2xl rounded-tl-sm p-3 max-w-xs">
-                  <p className="text-sm text-gray-800">I'm Cassie B., your AI Customer Support Specialist. How can I help you today?</p>
-                </div>
-              </div>
-
-              {/* Demo Response */}
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 bg-gradient-to-br from-[#8B5CF6] to-[#2D1A53] rounded-full flex items-center justify-center flex-shrink-0">
-                  <Headphones size={16} className="text-white" />
-                </div>
-                <div className="bg-gray-100 rounded-2xl rounded-tl-sm p-3 max-w-xs">
-                  <p className="text-sm text-gray-800">I can help you with questions about our AI customer support solutions, pricing, implementation, or any other concerns you might have!</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Chat Input */}
-            <div className="p-4 border-t border-gray-200">
-              <div className="flex items-center gap-2">
-                <input
-                  type="text"
-                  placeholder="Ask me anything about customer support..."
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8B5CF6] focus:border-transparent text-sm"
-                />
-                <button className="bg-gradient-to-r from-[#8B5CF6] to-[#2D1A53] text-white p-2 rounded-xl hover:shadow-lg transition-all duration-300">
-                  <ArrowRight size={16} />
-                </button>
-              </div>
-            </div>
-
-            {/* n8n Chat Container (fallback) */}
-            <div id="n8n-chat-container" className="hidden"></div>
-          </div>
-        </motion.div>
+          {/* n8n chat widget will be rendered here */}
+        </div>
       )}
     </div>
   );
