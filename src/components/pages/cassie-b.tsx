@@ -194,6 +194,7 @@ const CassieBPage: React.FC = () => {
             </Link>
           </div>
         </nav>
+        
       </motion.header>
       
 
