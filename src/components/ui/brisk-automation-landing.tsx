@@ -243,6 +243,7 @@ const BriskAutomationLanding: React.FC = () => {
       >
         <nav className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
+            {/* Logo */}
             <div className="flex-shrink-0">
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
@@ -294,11 +295,12 @@ const BriskAutomationLanding: React.FC = () => {
                   </motion.div>
                 </motion.div>
                 <div className="flex items-center gap-2">
-                  <span className="text-2xl font-bold text-[#2D1A53]">BRISK AUTOMATIONS</span>
+                  <span className="text-xl md:text-2xl font-bold text-[#2D1A53]">BRISK AUTOMATIONS</span>
                 </div>
               </motion.div>
             </div>
 
+            {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-8">
               {navItems.map((item) => (
                 <a
@@ -312,43 +314,87 @@ const BriskAutomationLanding: React.FC = () => {
               ))}
             </div>
 
+            {/* Right side buttons */}
             <div className="flex items-center space-x-4">
+              {/* Desktop CTA Button */}
               <motion.a
                 href="#contact"
-                className="bg-[#C89BA1] text-white px-6 py-2 rounded-lg text-sm font-semibold hover:bg-[#C89BA1]/90 transition-all duration-200"
+                className="hidden md:block bg-[#C89BA1] text-white px-6 py-2 rounded-lg text-sm font-semibold hover:bg-[#C89BA1]/90 transition-all duration-200"
                 whileHover={{ scale: 1.02, x: 2 }}
                 whileTap={{ scale: 0.98 }}
               >
                 Let's Talk
               </motion.a>
 
-              <button
-                className="md:hidden text-[#A1ACB5] hover:text-[#2D1A53] transition-colors"
+              {/* Mobile Menu Button */}
+              <motion.button
+                className="md:hidden relative z-50 p-2 text-[#A1ACB5] hover:text-[#2D1A53] transition-colors focus:outline-none"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 aria-label="Toggle menu"
+                whileTap={{ scale: 0.95 }}
               >
-                {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-              </button>
+                <motion.div
+                  className="w-6 h-6 flex flex-col justify-center items-center"
+                  animate={isMobileMenuOpen ? "open" : "closed"}
+                >
+                  <motion.span
+                    className="w-6 h-0.5 bg-current block mb-1.5"
+                    variants={{
+                      closed: { rotate: 0, y: 0 },
+                      open: { rotate: 45, y: 2 }
+                    }}
+                    transition={{ duration: 0.3 }}
+                  />
+                  <motion.span
+                    className="w-6 h-0.5 bg-current block mb-1.5"
+                    variants={{
+                      closed: { opacity: 1 },
+                      open: { opacity: 0 }
+                    }}
+                    transition={{ duration: 0.3 }}
+                  />
+                  <motion.span
+                    className="w-6 h-0.5 bg-current block"
+                    variants={{
+                      closed: { rotate: 0, y: 0 },
+                      open: { rotate: -45, y: -2 }
+                    }}
+                    transition={{ duration: 0.3 }}
+                  />
+                </motion.div>
+              </motion.button>
             </div>
           </div>
 
+          {/* Mobile Menu */}
           <AnimatePresence>
             {isMobileMenuOpen && (
-              <motion.div
-                variants={mobileMenuVariants}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-                className="md:hidden fixed top-16 left-0 right-0 bottom-0 bg-white/95 backdrop-blur-xl border-b border-[#2D1A53]/10 shadow-xl z-40 overflow-y-auto"
-              >
-                <div className="px-6 py-8 space-y-6 h-full">
-                  {/* Navigation Items */}
-                  <div className="space-y-6">
+              <>
+                {/* Backdrop */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="md:hidden fixed inset-0 bg-black/20 backdrop-blur-sm z-40"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                />
+
+                {/* Mobile Menu Panel */}
+                <motion.div
+                  initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                  className="md:hidden absolute top-full left-0 right-0 bg-white/95 backdrop-blur-xl border-b border-[#2D1A53]/10 shadow-xl z-50 max-h-screen overflow-y-auto"
+                >
+                  <div className="px-6 py-6 space-y-4">
+                    {/* Navigation Items */}
                     {navItems.map((item, index) => (
                       <motion.a
                         key={item.name}
                         href={item.href}
-                        className="block text-lg font-medium text-[#8B9299] hover:text-[#2D1A53] transition-colors duration-200 py-3 border-b border-[#2D1A53]/10"
+                        className="block text-lg font-medium text-[#8B9299] hover:text-[#2D1A53] transition-colors duration-200 py-3 border-b border-[#2D1A53]/10 last:border-b-0"
                         onClick={() => setIsMobileMenuOpen(false)}
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
@@ -357,35 +403,35 @@ const BriskAutomationLanding: React.FC = () => {
                         {item.name}
                       </motion.a>
                     ))}
-                  </div>
 
-                  {/* CTA Button */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: 0.4 }}
-                    className="pt-6"
-                  >
-                    <a
-                      href="#contact"
-                      className="block w-full bg-[#C89BA1] text-white px-6 py-4 rounded-lg text-lg font-semibold hover:bg-[#C89BA1]/90 transition-all duration-200 text-center"
-                      onClick={() => setIsMobileMenuOpen(false)}
+                    {/* Mobile CTA Button */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: navItems.length * 0.1 }}
+                      className="pt-4"
                     >
-                      Let's Talk
-                    </a>
-                  </motion.div>
+                      <a
+                        href="#contact"
+                        className="block w-full bg-[#C89BA1] text-white px-6 py-4 rounded-lg text-lg font-semibold hover:bg-[#C89BA1]/90 transition-all duration-200 text-center"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        Let's Talk
+                      </a>
+                    </motion.div>
 
-                  {/* Optional: Add some branding or additional info */}
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.3, delay: 0.6 }}
-                    className="pt-8 text-center text-sm text-[#8B9299]"
-                  >
-                    <p>Ready to automate your business?</p>
-                  </motion.div>
-                </div>
-              </motion.div>
+                    {/* Additional Info */}
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.3, delay: 0.5 }}
+                      className="pt-4 text-center text-sm text-[#8B9299]"
+                    >
+                      <p>Ready to automate your business?</p>
+                    </motion.div>
+                  </div>
+                </motion.div>
+              </>
             )}
           </AnimatePresence>
         </nav>
