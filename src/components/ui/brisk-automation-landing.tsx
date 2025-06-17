@@ -1,5 +1,5 @@
 "use client";
-
+import { Link } from "react-router-dom";
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useSpring } from "framer-motion";
 import {
@@ -22,7 +22,7 @@ import {
   YoutubeIcon,
   LinkedinIcon
 } from "lucide-react";
-import { Link } from "react-router-dom";
+
 
 interface NavItem {
   name: string;
@@ -1243,16 +1243,18 @@ const BriskAutomationLanding: React.FC = () => {
                         <p className="text-[#8B9299] leading-relaxed text-sm">{specialist.description}</p>
                       </div>
 
+                      // Replace your Action Button section with this simple solution:
+
                       {/* Action Button */}
                       <div className="pt-2">
                         {specialist.available ? (
-                          <button
-                            onClick={() => console.log(`Navigate to ${specialist.name}`)}
-                            className="inline-flex items-center gap-2 bg-[#C89BA1] text-white px-6 py-3 rounded-lg text-sm font-semibold hover:bg-[#C89BA1]/90 transition-all duration-200 shadow-lg hover:shadow-xl"
+                          <a
+                            href={specialist.route}
+                            className="inline-flex items-center gap-2 bg-[#C89BA1] text-white px-6 py-3 rounded-lg text-sm font-semibold hover:bg-[#C89BA1]/90 transition-all duration-200 shadow-lg hover:shadow-xl cursor-pointer"
                           >
                             Meet {specialist.name.split(' ')[0]}
                             <ArrowRight size={16} />
-                          </button>
+                          </a>
                         ) : (
                           <button
                             disabled
@@ -1260,7 +1262,7 @@ const BriskAutomationLanding: React.FC = () => {
                           >
                             Coming Soon
                             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                              <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                              <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 616 0z" clipRule="evenodd" />
                             </svg>
                           </button>
                         )}
