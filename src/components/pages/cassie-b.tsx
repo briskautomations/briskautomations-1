@@ -194,8 +194,7 @@ const CassieBPage: React.FC = () => {
             </Link>
           </div>
         </nav>
-      </motion.header>
-      <script type="module" defer>
+        <script type="module" defer>
   import Chatbot from "https://cdn.n8nchatui.com/v1/embed.js";
   Chatbot.init({
     "n8nChatUrl": "YOUR_N8N_CHAT_TRIGGER_NODE_WEBHOOK_URL", // Replace this with your n8n chat webhook URL
@@ -286,6 +285,8 @@ const CassieBPage: React.FC = () => {
     }
     });
   </script>
+      </motion.header>
+      
 
       {/* Main Content */}
       <main className="relative z-10">
